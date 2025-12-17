@@ -1,0 +1,9 @@
+Merchant: AlphaFX
+Industry: Forex
+Country: Brazil
+Monthly Volume: 150000
+
+Merchant: NutraLife
+Industry: Nutra
+Country: USA
+Monthly Volume: 30000
