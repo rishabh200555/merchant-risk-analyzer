@@ -7,6 +7,7 @@ using namespace std;
 int main()
 {
     string merchantName, industry, country;
+    string websiteText;
     int monthlyVolume;
     int riskScore = 0;
 
@@ -23,6 +24,10 @@ int main()
 
     cout << "Enter Estimated Monthly Volume (USD): ";
     cin >> monthlyVolume;
+    cin.ignore();
+
+    cout << "Enter Website Keywords / Description: ";
+    getline(cin, websiteText);
 
     // -------- Industry Risk --------
     if (industry == "forex" || industry == "crypto" || industry == "gambling")
@@ -80,27 +85,63 @@ int main()
         reasons.push_back("Low transaction volume");
     }
 
+    // -------- Website Keyword Risk --------
+    vector<string> riskyKeywords = {
+        "forex", "trading", "leverage", "guaranteed",
+        "casino", "bet", "profit", "investment"};
+
+    for (const string &word : riskyKeywords)
+    {
+        if (websiteText.find(word) != string::npos)
+        {
+            riskScore += 5;
+            reasons.push_back("Risky website keyword detected (" + word + ")");
+        }
+    }
+
     // Cap risk score
     if (riskScore > 100)
         riskScore = 100;
 
-    // -------- Output --------
-    cout << "\n--- Risk Assessment ---\n";
-    cout << "Merchant: " << merchantName << endl;
-    cout << "Risk Score: " << riskScore << endl;
+    // -------- Decision Logic --------
+    string riskLevel, decision, action;
 
     if (riskScore <= 30)
-        cout << "Risk Level: LOW (Approved)\n";
+    {
+        riskLevel = "LOW";
+        decision = "Approved";
+        action = "Standard onboarding";
+    }
     else if (riskScore <= 60)
-        cout << "Risk Level: MEDIUM (Enhanced KYC Required)\n";
+    {
+        riskLevel = "MEDIUM";
+        decision = "Review Required";
+        action = "Enhanced KYC + Compliance checks";
+    }
     else
-        cout << "Risk Level: HIGH (Manual Review / Rejected)\n";
+    {
+        riskLevel = "HIGH";
+        decision = "Rejected / Manual Review";
+        action = "Senior risk team approval required";
+    }
 
-    cout << "\nReasons:\n";
+    // -------- Final Report --------
+    cout << "\n=================================\n";
+    cout << "      MERCHANT RISK REPORT\n";
+    cout << "=================================\n";
+    cout << "Merchant Name   : " << merchantName << endl;
+    cout << "Risk Score      : " << riskScore << endl;
+    cout << "Risk Level      : " << riskLevel << endl;
+    cout << "Decision        : " << decision << endl;
+    cout << "Required Action : " << action << endl;
+
+    cout << "\nRisk Signals Identified:\n";
     for (const string &r : reasons)
     {
-        cout << "- " << r << endl;
+        cout << " - " << r << endl;
     }
+
+    cout << "=================================\n";
 
     return 0;
 }
